@@ -1,7 +1,7 @@
 /**
     Filename:       minesweeper.cpp
     Author:         padin.adrian@gmail.com
-    Date:           2022-01-07
+    Initial date:   2022-01-07
     Description:    Minesweeper clone
 */
 
@@ -12,9 +12,6 @@
 #include <vector>
 #include <random>
 #include <iostream>
-
-/* ===== Typedefs ===== */
-
 
 /* ===== Classes ===== */
 
@@ -143,10 +140,6 @@ void Minefield::Initialize()
         if (!ListContainsQ(placed, mine)) {
             placed.push_back(mine);
             this->mines.set(mine, -1) ;     // Lay a mine
-            
-            // Debugging
-            printf("Laying a mine at %d %d\n", mine.x, mine.y);
-            fflush(stdout);
         }
     }
     
@@ -215,11 +208,6 @@ int8_t Minefield::Update(Coordinates selected)
 {
     int8_t result = this->mines.at(selected.x, selected.y);
     
-    // Debugging
-    printf("Update selected: %d %d\n", selected.x, selected.y);
-    printf("Update result: %d\n", result);
-    fflush(stdout);
-    
     switch (result) {
         // Bomb - game over!
         case -1: {
@@ -263,11 +251,6 @@ bool Minefield::IsCleared() const
 /** Check if a particular tile is a mine. */
 bool Minefield::isMine(Coordinates selected)
 {
-    // Debugging
-    // printf("Checking for mine at %d %d\n", selected.x, selected.y);
-    // printf("result: %d\n", this->mines.at(selected.x, selected.y));
-    // fflush(stdout);
-    
     return (-1 == this->mines.at(selected.x, selected.y));
 }
 
@@ -344,19 +327,18 @@ void DisplayMinefield(const Minefield& minefield)
     
     const size_t width = mines.width();
     const size_t height = mines.height();
-    const size_t rowSeparatorWidth = (4 * width) + 1;
+    const size_t rowSeparatorWidth = (4 * width) + 5;
     
     char printChar;
     int8_t tileValue = 0;
     int8_t tileVisible = 0;
     
-    // Debugging
-    // for (size_t x = 0; x < width; ++x) {
-    //     for (size_t y = 0; y < height; ++y) {
-    //         printf("Tile value at %d %d: %d\n", x, y, mines.at(x, y));
-    //     }
-    // }
-    // fflush(stdout);
+    // Print top numbers
+    printf("    ");
+    for (size_t x = 0; x < width; ++x) {
+        printf("| %d ", x % 10);
+    }
+    printf("|\n");
     
     // Print each row
     // Ex)
@@ -366,7 +348,7 @@ void DisplayMinefield(const Minefield& minefield)
         
         // Print top bar
         for (size_t i = 0; i < rowSeparatorWidth; ++i) { printf("-"); }
-        printf("\n");
+        printf("\n  %d ", y % 10);
         
         // Print each column within a row
         for (size_t x = 0; x < width; ++x) {
@@ -415,31 +397,21 @@ void PlayGame() {
     bool gameLost = false;
     int8_t tileValue = 0;
     
-    // Debugging
-    // minefield.Reveal();
-    
     while (!(gameWon || gameLost)) {
         // Show the minefield and ask the player to pick a tile.
+        printf("\n");
         DisplayMinefield(minefield);
         printf("Pick a tile. Input coordinates as (x y): ");
         fflush(stdout);
         scanf("%d %d", &x, &y);
+        printf("\n");
         
         tileValue = minefield.Update(Coordinates(x, y));
         
         // Game over if the tile is a bomb.
         gameLost = (tileValue == -1);
         gameWon = minefield.IsCleared();
-        
-        printf("Game won: %d\n", gameWon);
-        printf("Game lost: %d\n", gameLost);
-        printf("Game won or lost: %d\n", (gameWon || gameLost));
-        printf("Game not won or lost: %d\n", !(gameWon || gameLost));
-        fflush(stdout);
     }
-    
-    printf("Game won: %d\n", gameWon);
-    printf("Game lost: %d\n", gameLost);
     
     // Show the minefield one last time and tell the player if they won or lost.
     DisplayMinefield(minefield);
@@ -454,16 +426,10 @@ void PlayGame() {
 
 /** Main */
 int main() {
-    std::cout << "Hello" << std::endl;
     printf("Welcome to Minesweeper!\n");
     fflush(stdout);
     
     PlayGame();
-    
-    // Debugging
-    // Minefield minefield(9, 9);
-    // minefield.Reveal();
-    // DisplayMinefield(minefield);
     
     // TODO: prompt to play again
 }
