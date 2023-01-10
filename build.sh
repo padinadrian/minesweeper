@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-g++ minesweeper.cpp -o minesweeper
+g++ minesweeper.cpp Minefield.cpp -o minesweeper
