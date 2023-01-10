@@ -9,6 +9,8 @@
 #include <cstdio>
 #include <stdint.h>
 #include <vector>
+#include <string>
+#include <iostream>
 #include "Minefield.hpp"
 
 /* ===== Functions ===== */
@@ -90,6 +92,7 @@ void PlayGame() {
     bool gameWon = false;
     bool gameLost = false;
     int8_t tileValue = 0;
+    std::string input;
     
     while (!(gameWon || gameLost)) {
         // Show the minefield and ask the player to pick a tile.
@@ -97,14 +100,22 @@ void PlayGame() {
         DisplayMinefield(minefield);
         printf("Pick a tile. Input coordinates as (x y): ");
         fflush(stdout);
-        scanf("%d %d", &x, &y);
+        
+        // Testing use of getline
+        std::getline(std::cin, input);
         printf("\n");
         
-        tileValue = minefield.Update(Coordinates(x, y));
+        int parseResults = sscanf(input.c_str(), "%d %d", &x, &y);
+        if (2 == parseResults) {
+            tileValue = minefield.Update(Coordinates(x, y));
         
-        // Game over if the tile is a bomb.
-        gameLost = (tileValue == -1);
-        gameWon = minefield.IsCleared();
+            // Game over if the tile is a bomb.
+            gameLost = (tileValue == -1);
+            gameWon = minefield.IsCleared();
+        }
+        else {
+            printf("Sorry, I didn't understand your command.\n");
+        }
     }
     
     // Show the minefield one last time and tell the player if they won or lost.
