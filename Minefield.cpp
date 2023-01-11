@@ -14,8 +14,10 @@
 /** Constructor */
 Minefield::Minefield(size_t width, size_t height, size_t numberOfMines) :
     mines(width, height),
+    flags(width, height),
     visibility(width, height),
-    numberOfMines(numberOfMines)
+    numberOfMines(numberOfMines),
+    flagsRemaining(numberOfMines)
 {
     Initialize();
 }
@@ -111,7 +113,13 @@ void Minefield::Reveal()
 */
 int8_t Minefield::Update(Coordinates selected)
 {
-    int8_t result = this->mines.at(selected.x, selected.y);
+    // If the tile is flagged, ignore and do not update.
+    if (this->flags.at(selected)) {
+        return 'F';
+    }
+    
+    // Check the true value of the selected tile.
+    int8_t result = this->mines.at(selected);
     
     switch (result) {
         // Bomb - game over!
@@ -128,12 +136,40 @@ int8_t Minefield::Update(Coordinates selected)
         
         // Normal spot - just reveal the number.
         default: {
-            this->visibility.set(selected.x, selected.y, 1);
+            this->visibility.set(selected, 1);
             break;
         }
     }
     
     return result;
+}
+
+/** Place a flag to indicate a potential mine. */
+int8_t Minefield::PlaceFlag(Coordinates selected)
+{
+    // Place a flag on the following conditions:
+    // 1. Have not yet reached the limit of flags placed.
+    // 2. Flag can only be placed on a hidden tile.
+    // 3. Flag is not already placed at the selected tile.
+    if ((this->flagsRemaining > 0) &&
+        (this->visibility.at(selected)) == 0 &&
+        (this->flags.at(selected)) == 0
+    ) {
+        this->flags.set(selected, 1);   // Place a flag.
+        this->flagsRemaining -= 1;      // Deduct the number of remaining flags.
+    }
+    return 0;
+}
+
+/** Clear a previously-placed flag. */
+int8_t Minefield::ClearFlag(Coordinates selected)
+{
+    // Only clear the flag if a flag is already placed.
+    if (this->flags.at(selected)) {
+        this->flags.set(selected, 0);   // Clear the flag.
+        this->flagsRemaining += 1;      // Increment the number of remaining flags.
+    }
+    return 0;
 }
 
 /** Return true if the minefield is completely cleared. */
@@ -156,7 +192,7 @@ bool Minefield::IsCleared() const
 /** Check if a particular tile is a mine. */
 bool Minefield::isMine(Coordinates selected)
 {
-    return (-1 == this->mines.at(selected.x, selected.y));
+    return (-1 == this->mines.at(selected));
 }
 
 /** Reveal all adjacent blank spaces when a blank space is revealed. */
@@ -189,11 +225,14 @@ void Minefield::floodFill(Coordinates start) {
         visited.push_back(current);
         
         // Reveal this tile.
-        this->visibility.set(current.x, current.y, 1);
+        this->visibility.set(current, 1);
+        
+        // If the tile had a flag, clear it.
+        this->ClearFlag(current);
         
         // If this tile is also a blank spot, find all neighbors and add them to the stack.
         // TODO: Check if we have seen the coordinates BEFORE adding to the stack!
-        if (0 == this->mines.at(current.x, current.y)) {
+        if (0 == this->mines.at(current)) {
             if (current.x > leftBound) {
                 remaining.emplace_back(current.Left());
                 if (current.y > bottomBound) {
