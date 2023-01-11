@@ -86,24 +86,57 @@ void DisplayMinefield(const Minefield& minefield)
     fflush(stdout);
 }
 
-/** Play the game */
-void PlayGame() {
-    
-    // TODO: Pick size and number of mines
-    // For now we just do the equivalent of "Beginner" mode.
-    // From https://datagenetics.com/blog/june12012/index.html
+/** Construct the Minefield object. */
+Minefield CreateMinefield(int8_t difficulty)
+{
+    // Difficulty:      W   H   Mines
     // Beginner:        9   9   10
     // Intermediate:    16  16  40
     // Expert:          30  16  99
-    Minefield minefield(9, 9, 10);
+    if (difficulty == 1) {
+        return Minefield(9, 9, 10);
+    }
+    else if (difficulty == 2) {
+        return Minefield(16, 16, 40);
+    }
+    else {
+        return Minefield(30, 16, 99);
+    }
+}
+
+/** Play the game */
+void PlayGame()
+{
+    // Choose difficulty
+    std::string input = "";
+    int8_t difficulty = 0;
+    while (difficulty == 0) {
+        printf("Choose your difficulty - Beginner (B), Intermediate (I), Expert (E): ");
+        std::getline(std::cin, input);
+        
+        if (input.length() > 0) {
+            if (input[0] == 'B' || input[0] == 'b') {
+                difficulty = 1;
+            }
+            if (input[0] == 'I' || input[0] == 'i') {
+                difficulty = 2;
+            }
+            if (input[0] == 'E' || input[0] == 'e') {
+                difficulty = 3;
+            }
+        }
+        printf("\n");
+    }
     
+    Minefield minefield = CreateMinefield(difficulty);
+    
+    // Play the game
     char c;
     int x = 0;
     int y = 0;
     bool gameWon = false;
     bool gameLost = false;
     int8_t tileValue = 0;
-    std::string input;
     
     while (!(gameWon || gameLost)) {
         // Show the minefield and ask the player to pick a tile.
@@ -159,7 +192,7 @@ void PlayGame() {
 
 /** Main */
 int main() {
-    printf("Welcome to Minesweeper!\n");
+    printf("\n\nWelcome to Minesweeper!\n\n");
     fflush(stdout);
     
     PlayGame();

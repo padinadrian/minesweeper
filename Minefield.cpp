@@ -113,6 +113,12 @@ void Minefield::Reveal()
 */
 int8_t Minefield::Update(Coordinates selected)
 {
+    // Input checking
+    if (selected.x > this->mines.width() ||
+        selected.y > this->mines.height()) {
+        return 0;
+    }
+    
     // If the tile is flagged, ignore and do not update.
     if (this->flags.at(selected)) {
         return 'F';
