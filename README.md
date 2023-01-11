@@ -6,7 +6,7 @@ Currently only runs from the command line but my goal is to make a reusable engi
 
 This project is mostly for my own fun, to practice my coding skills, and to experiment with different UIs. If you want to use it for your own use you are welcome as long as you follow the rules of the license.
 
-![Example of minesweeper](example.png)
+![Example of minesweeper](example_color.png)
 
 ## Planned updates
 

@@ -26,6 +26,7 @@ void DisplayMinefield(const Minefield& minefield)
     const size_t height = mines.height();
     const size_t rowSeparatorWidth = (4 * width) + 5;
     
+    std::string tileOutput = " ";
     
     // Print top numbers
     printf("    ");
@@ -47,25 +48,34 @@ void DisplayMinefield(const Minefield& minefield)
         // Print each column within a row
         for (size_t x = 0; x < width; ++x) {
             
-            char printChar;
             if (flags.at(x, y)) {
-                printChar = 'F';
+                tileOutput = "\033[1;41mF\033[0m";
             }
+            
             else if (visibility.at(x, y)) {
                 // The tile is visible - show the contents.
                 int8_t tileValue = mines.at(x, y);
                 
-                if (tileValue == 0) { printChar = ' '; }
-                else if (tileValue > 0 && tileValue < 9) { printChar = '0' + tileValue; }
-                else if (tileValue == -1) { printChar = '*'; }
-                else { printChar = '?'; }
+                switch (tileValue) {
+                    case 0: { tileOutput = ' '; break; }
+                    case 1: { tileOutput = "\033[34m1\033[0m"; break; }     // 1: Blue
+                    case 2: { tileOutput = "\033[32m2\033[0m"; break; }     // 2: Green
+                    case 3: { tileOutput = "\033[31m3\033[0m"; break; }     // 3: Red
+                    case 4: { tileOutput = "\033[35m4\033[0m"; break; }     // 4: Magenta
+                    case 5: { tileOutput = "\033[33m5\033[0m"; break; }     // 5: Yellow
+                    case 6: { tileOutput = "\033[36m6\033[0m"; break; }     // 6: Cyan
+                    case 7: { tileOutput = "\033[1;33m7\033[0m"; break; }   // 7: Bright yellow
+                    case 8: { tileOutput = "\033[37m8\033[0m"; break; }     // 8: White
+                    case -1: { tileOutput = "\033[30;41mX\033[0m"; break; } // Bomb: Dark red
+                    default: { tileOutput = '?'; break; }
+                }
             }
             else {
                 // The tile is NOT visible - show hidden as "-".
-                printChar = '-';
+                tileOutput = '-';
             }
             
-            printf("| %c ", printChar);
+            printf("| %s ", tileOutput.c_str());
         }
         printf("|\n");
     }
