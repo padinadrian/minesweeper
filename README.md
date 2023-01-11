@@ -12,10 +12,6 @@ This project is mostly for my own fun, to practice my coding skills, and to expe
 
 * More user-friendly input method.
 
-* More robust input handling (right now the console freaks out if you give it the wrong input).
-
 * Selectable difficult (currently only Beginner mode is available).
-
-* Color coding minefield nubmers.
 
 * Any kind of GUI.
