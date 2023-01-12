@@ -4,6 +4,7 @@
         "xlocale": "cpp",
         "xutility": "cpp",
         "xiosbase": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "*.in": "cpp"
     }
 }
