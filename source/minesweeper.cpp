@@ -12,6 +12,7 @@
 #include <string>
 #include <iostream>
 #include "Minefield.hpp"
+#include "version.hpp"
 
 /* ===== Functions ===== */
 
@@ -204,11 +205,27 @@ void PlayGame()
 }
 
 /** Main */
-int main() {
+int main(int argc, char *argv[]) {
+    
+    if (argc > 1) {
+        std::string arg1(argv[1]);
+        if (arg1 == "--version") {
+            printf("Minesweeper version %s\n", minesweeper::VERSION_FULL.c_str());
+        }
+        else {
+            printf("Minesweeper clone by Adrian Padin (padin.adrian@gmail.com)\n");
+            printf("Copyright (C) 2023\n");
+            printf("Version %s\n\n", minesweeper::VERSION_FULL.c_str());
+            printf("Usage:\n\tminesweeper\n\n");
+        }
+        return 0;
+    }
+    
     printf("\n\nWelcome to Minesweeper!\n\n");
     fflush(stdout);
     
     PlayGame();
     
     // TODO: prompt to play again
+    return 0;
 }

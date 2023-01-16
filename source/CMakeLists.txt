@@ -10,6 +10,11 @@ configure_file(
     "${CMAKE_CURRENT_BINARY_DIR}/version.hpp"
 )
 
+# Add directory to include version header file
+include_directories(
+    "${CMAKE_CURRENT_BINARY_DIR}"
+)
+
 # Create binary executable
 add_executable(${PROJECT_NAME}
     minesweeper.cpp
