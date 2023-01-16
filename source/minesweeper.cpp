@@ -31,7 +31,12 @@ void DisplayMinefield(const Minefield& minefield)
     // Print top numbers
     printf("    ");
     for (size_t x = 0; x < width; ++x) {
-        printf("| %d ", x % 10);
+        if (x > 9) {
+            printf("|%d ", x);
+        }
+        else {
+            printf("| %d ", x);
+        }
     }
     printf("|\n");
     
@@ -43,13 +48,22 @@ void DisplayMinefield(const Minefield& minefield)
         
         // Print top bar
         for (size_t i = 0; i < rowSeparatorWidth; ++i) { printf("-"); }
-        printf("\n  %d ", y % 10);
+        if (y > 9) {
+            printf("\n %d ", y);
+        }
+        else {
+            printf("\n  %d ", y);
+        }
         
         // Print each column within a row
         for (size_t x = 0; x < width; ++x) {
             
-            if (flags.at(x, y)) {
-                tileOutput = "\033[1;41mF\033[0m";
+            if (visibility.at(x, y) && (mines.at(x, y) == -1)) {
+                tileOutput = "\033[30;41mX\033[0m";     // Bomb: Dark red
+            }
+            
+            else if (flags.at(x, y)) {
+                tileOutput = "\033[1;41mF\033[0m";     // Flag: Light red
             }
             
             else if (visibility.at(x, y)) {
@@ -66,7 +80,6 @@ void DisplayMinefield(const Minefield& minefield)
                     case 6: { tileOutput = "\033[36m6\033[0m"; break; }     // 6: Cyan
                     case 7: { tileOutput = "\033[1;33m7\033[0m"; break; }   // 7: Bright yellow
                     case 8: { tileOutput = "\033[37m8\033[0m"; break; }     // 8: White
-                    case -1: { tileOutput = "\033[30;41mX\033[0m"; break; } // Bomb: Dark red
                     default: { tileOutput = '?'; break; }
                 }
             }
