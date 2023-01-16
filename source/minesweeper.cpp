@@ -33,10 +33,10 @@ void DisplayMinefield(const Minefield& minefield)
     printf("    ");
     for (size_t x = 0; x < width; ++x) {
         if (x > 9) {
-            printf("|%d ", x);
+            printf("|%zu ", x);
         }
         else {
-            printf("| %d ", x);
+            printf("| %zu ", x);
         }
     }
     printf("|\n");
@@ -50,10 +50,10 @@ void DisplayMinefield(const Minefield& minefield)
         // Print top bar
         for (size_t i = 0; i < rowSeparatorWidth; ++i) { printf("-"); }
         if (y > 9) {
-            printf("\n %d ", y);
+            printf("\n %zu ", y);
         }
         else {
-            printf("\n  %d ", y);
+            printf("\n  %zu ", y);
         }
         
         // Print each column within a row
@@ -156,7 +156,7 @@ void PlayGame()
         // Show the minefield and ask the player to pick a tile.
         printf("\n");
         DisplayMinefield(minefield);
-        printf("Flags remaining: %d\n", minefield.FlagsRemaining());
+        printf("Flags remaining: %zu\n", minefield.FlagsRemaining());
         printf("Pick a tile. Start with F to place a flag. Start with C to clear a flag.\n");
         printf("Input coordinates as (x y): ");
         fflush(stdout);
