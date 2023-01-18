@@ -114,8 +114,8 @@ void Minefield::Reveal()
 int8_t Minefield::Update(Coordinates selected)
 {
     // Input checking
-    if (selected.x > this->mines.width() ||
-        selected.y > this->mines.height()) {
+    if (selected.x >= this->mines.width() ||
+        selected.y >= this->mines.height()) {
         return 0;
     }
     
