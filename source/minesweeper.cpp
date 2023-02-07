@@ -32,11 +32,11 @@ void DisplayMinefield(const Minefield& minefield)
     // Print top numbers
     printf("    ");
     for (size_t x = 0; x < width; ++x) {
-        if (x > 9) {
-            printf("|%zu ", x);
+        if (x > 8) {
+            printf("|%zu ", x + 1);
         }
         else {
-            printf("| %zu ", x);
+            printf("| %zu ", x + 1);
         }
     }
     printf("|\n");
@@ -49,11 +49,11 @@ void DisplayMinefield(const Minefield& minefield)
         
         // Print top bar
         for (size_t i = 0; i < rowSeparatorWidth; ++i) { printf("-"); }
-        if (y > 9) {
-            printf("\n %zu ", y);
+        if (y > 8) {
+            printf("\n %zu ", y + 1);
         }
         else {
-            printf("\n  %zu ", y);
+            printf("\n  %zu ", y + 1);
         }
         
         // Print each column within a row
@@ -167,7 +167,7 @@ void PlayGame()
         
         // Normal input
         if (2 == sscanf(input.c_str(), "%d %d", &x, &y)) {
-            tileValue = minefield.Update(Coordinates(x, y));
+            tileValue = minefield.Update(Coordinates(x - 1, y - 1));
             
             // Game over if the tile is a bomb.
             gameLost = (tileValue == -1);
@@ -177,10 +177,10 @@ void PlayGame()
         // Place/clear a flag
         else if (3 == sscanf(input.c_str(), "%c %d %d", &c, &x, &y)) {
             if (c == 'F' || c == 'f') {
-                minefield.PlaceFlag(Coordinates(x, y));
+                minefield.PlaceFlag(Coordinates(x - 1, y - 1));
             }
             else if (c == 'C' || c == 'c') {
-                minefield.ClearFlag(Coordinates(x, y));
+                minefield.ClearFlag(Coordinates(x - 1, y - 1));
             }
             else {
                 printf("Sorry, I didn't understand your command.\n");

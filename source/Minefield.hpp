@@ -31,6 +31,10 @@ public:
     /** Set or unset flags. */
     int8_t PlaceFlag(Coordinates selected);
     int8_t ClearFlag(Coordinates selected);
+    
+    /** Checkers */
+    bool IsVisibile(Coordinates selected) { return visibility.at(selected); }
+    bool IsFlag(Coordinates selected) { return flags.at(selected); }
 
     /** Check if the minefield is cleared (i.e. game is won). */
     bool IsCleared() const;
@@ -40,6 +44,8 @@ public:
     const Grid& Flags() const { return flags; }
     const Grid& Visibility() const { return visibility; }
     size_t FlagsRemaining() const { return flagsRemaining; }
+    size_t Width() const { return mines.width(); }
+    size_t Height() const { return mines.height(); }
 
 private:
     void floodFill(Coordinates start);
